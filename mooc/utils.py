@@ -189,7 +189,7 @@ class Outline(ClassicFile):
         """传入一个字符串，一个计数器，一个级别（从 0 开始）和一个符号，然后写入大纲。首先会打印出相关信息。"""
 
         print('%s%s%s' % ('  ' * level, Outline.res_type[sign], string))
-        name = '%s%s {%s}%s' % ('  ' * level, string, counter[level], sign)
+        name = '%s%s {%s}%s' % ('  ' * level, string, counter[level], self.res_type[sign])
         self.write_string(name)
 
 

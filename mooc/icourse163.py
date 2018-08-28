@@ -12,6 +12,7 @@ FILES = {}
 def get_summary(url):
     """从课程主页面获取信息"""
 
+    url = url.replace('learn/', 'course/')
     res = CANDY.get(url).text
 
     term_id = re.search(r'termId : "(\d+)"', res).group(1)

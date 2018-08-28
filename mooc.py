@@ -57,7 +57,7 @@ def main():
     config = {'doc': args.no_doc, 'sub': args.no_sub, 'file': args.no_file, 'text': args.no_text, 'dpl': args.no_dpl,
               'cookies': args.c, 'rename': args.inter, 'dir': args.d, 'resolution': resolutions.index(args.r.lower())}
 
-    if re.match(r'https?://www.icourse163.org/course/', args.url):
+    if re.match(r'https?://www.icourse163.org/(course|learn)/', args.url):
         from mooc import icourse163
         icourse163.start(args.url, config)
     elif re.match(r'https?://www.xuetangx.com/courses/.+/about', args.url):
@@ -71,7 +71,7 @@ def main():
     elif re.match(r'https?://study.163.com/course/', args.url):
         from mooc import study_163
         study_163.start(args.url, config)
-    elif re.match(r'https?://open.163.com/((special)|(movie))/', args.url):
+    elif re.match(r'https?://open.163.com/(special|movie)/', args.url):
         from mooc import open163
         open163.start(args.url, config)
     elif re.match(r'https?://www.cnmooc.org/portal/course/', args.url):

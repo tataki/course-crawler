@@ -71,6 +71,9 @@ def main():
     elif re.match(r'https?://study.163.com/course/', args.url):
         from mooc import study_163
         study_163.start(args.url, config)
+    elif re.match(r'https?://open.163.com/((special)|(movie))/', args.url):
+        from mooc import open163
+        open163.start(args.url, config)
     elif re.match(r'https?://www.cnmooc.org/portal/course/', args.url):
         from mooc import cnmooc
         cookies = store_cookies('cnmooc.json')

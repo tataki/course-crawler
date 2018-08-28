@@ -279,22 +279,23 @@ class Counter(object):
         counter：计数器的列表。
     """
 
-    def __init__(self):
+    def __init__(self, level_num = 3):
         """初始化一个列表"""
 
-        self.counter = [0, 0, 0]
+        self.counter = [0] * level_num
+        self.level_num = level_num
 
     def add(self, level):
         """给第 level 级别的计数器 +1"""
 
-        for i in range(level + 1, 3):
+        for i in range(level + 1, self.level_num):
             self.counter[i] = 0
         self.counter[level] += 1
 
     def __str__(self):
         """返回一个完整的计数器"""
 
-        return '{}.{}.{}'.format(*self.counter)
+        return '.'.join(map(str, self.counter))
 
     def __getitem__(self, index):
         """返回到第 level 级别为止的计数器"""
@@ -304,7 +305,7 @@ class Counter(object):
     def reset(self):
         """将第 2 级别的计数置为 0"""
 
-        self.counter[2] = 0
+        self.counter[-1] = 0
 
 
 def res_print(file_name):

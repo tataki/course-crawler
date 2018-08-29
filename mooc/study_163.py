@@ -117,7 +117,6 @@ def get_resource(course_id):
                      data=post_data).text.encode('utf_8').decode('unicode_escape')
 
     chapters = re.findall(r'courseId=\d+;.+id=(\d+);.+name="(.+)";', res)
-    print(res)
     for chapter in chapters:
         counter.add(0)
         outline.write(chapter[1], counter, 0)

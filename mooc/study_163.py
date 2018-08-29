@@ -117,17 +117,18 @@ def get_resource(course_id):
                      data=post_data).text.encode('utf_8').decode('unicode_escape')
 
     chapters = re.findall(r'courseId=\d+;.+id=(\d+);.+name="(.+)";', res)
+    print(res)
     for chapter in chapters:
         counter.add(0)
         outline.write(chapter[1], counter, 0)
 
-        lessons = re.findall('chapterId=%s;.+?hasReferences=(\w+);.+?id=(\d+).+?lessonName="(.*?)";.+?type=(\d);' % chapter[0], res, re.DOTALL)
+        lessons = re.findall('chapterId=%s;.+?hasReferences=(\w+);.+?id=(\d+).+?lessonName="(.*?)";.+?type=(\d+);' % chapter[0], res, re.DOTALL)
         for lesson in lessons:
             counter.add(1)
             outline.write(lesson[2], counter, 1)
 
             # Video
-            if lesson[3] == '2':
+            if lesson[3] == '2' or lesson[3] == '50':
                 counter.add(2)
                 outline.write(lesson[2], counter, 2, sign='#')
                 video_list.append(Video(counter, lesson[2], lesson))

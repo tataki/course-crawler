@@ -111,9 +111,9 @@ def start(url, config, cookies=None):
     """调用接口函数"""
 
     global WORK_DIR
+    CONFIG.update(config)
     CONFIG['dpl'] = config['dpl'] and SYS == 'nt'
 
-    CONFIG.update(config)
     CANDY.set_cookies(cookies)
 
     course_info = get_summary(url)

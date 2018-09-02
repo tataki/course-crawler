@@ -14,7 +14,10 @@ def get_summary(url):
 
     res = requests.get(url).text
 
-    course_id = re.search(r'courseId=(\d+)', url).group(1)
+    if re.search(r'courseId=(\d+)', url):
+        course_id = re.search(r'courseId=(\d+)', url).group(1)
+    else:
+        course_id = re.search(r'introduction/(\d+)\.htm', url).group(1)
     name = re.search(r'<title>(.+) - 网易云课堂</title>', res).group(1)
 
     dir_name = course_dir(name, '网易云课堂')

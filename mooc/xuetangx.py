@@ -61,7 +61,6 @@ def get_content(url):
     outline = Outline()
     counter = Counter()
     video_counter = Counter()
-    playlist = Playlist()
     video_list = []
 
     courseware = CANDY.get(url).text
@@ -136,6 +135,7 @@ def get_content(url):
         WORK_DIR.change('Videos')
         rename = WORK_DIR.file('Names.txt') if CONFIG['rename'] else False
         if CONFIG['dpl']:
+            playlist = Playlist()
             parse_res_list(video_list, rename, playlist.write, get_video)
         else:
             parse_res_list(video_list, rename, get_video)

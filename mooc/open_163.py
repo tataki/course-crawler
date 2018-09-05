@@ -141,7 +141,6 @@ def get_resource(links):
     """获取各种资源"""
 
     outline = Outline()
-    playlist = Playlist()
     counter = Counter(1)
 
     video_list = []
@@ -155,6 +154,7 @@ def get_resource(links):
         rename = WORK_DIR.file('Names.txt') if CONFIG['rename'] else False
         WORK_DIR.change('Videos')
         if CONFIG['dpl']:
+            playlist = Playlist()
             parse_res_list(video_list, rename, playlist.write, parse_resource)
         else:
             parse_res_list(video_list, rename, parse_resource)

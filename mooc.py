@@ -64,7 +64,7 @@ def main():
         from mooc import xuetangx
         cookies = store_cookies('xuetangx.json')
         xuetangx.start(args.url, config, cookies)
-    elif re.match(r'https?://mooc.study.163.com/course/', args.url):
+    elif re.match(r'https?://mooc.study.163.com/(course|learn)/', args.url):
         from mooc import study_mooc
         cookies = store_cookies('study_163_mooc.json')
         study_mooc.start(args.url, config, cookies)

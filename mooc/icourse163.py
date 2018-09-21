@@ -21,6 +21,7 @@ def get_summary(url):
     dir_name = course_dir(names[0], names[1])
 
     print(dir_name)
+    CONFIG['term_id'] = term_id
     return term_id, dir_name
 
 
@@ -37,19 +38,51 @@ def parse_resource(resource):
 
     file_name = resource.file_name
     if resource.type == 'Video':
-        resolutions = ['Shd', 'Hd', 'Sd']
-        for sp in resolutions[CONFIG['resolution']:]:
-            # TODO: 增加视频格式选择
-            # video_info = re.search(r'%sUrl="(?P<url>.*?(?P<ext>\.((m3u8)|(mp4)|(flv))).*?)"' % sp, res)
-            video_info = re.search(r'(?P<ext>mp4)%sUrl="(?P<url>.*?\.(?P=ext).*?)"' % sp, res)
-            if video_info:
-                url, ext = video_info.group('url', 'ext')
-                ext = '.' + ext
-                break
-        res_print(file_name + ext)
-        FILES['renamer'].write(re.search(r'(\w+\.((m3u8)|(mp4)|(flv)))', url).group(1), file_name, ext)
-        FILES['video'].write_string(url)
-        resource.ext = ext
+        if CONFIG['hasToken']:
+            video_token = CANDY.post('https://www.icourse163.org/web/j/resourceRpcBean.getVideoToken.rpc?csrfKey='+CONFIG['token'], data ={
+                'videoId': resource.meta[0],
+                'targetId': CONFIG['term_id'],
+                'targetType': '0',
+                }).json()['result']['signature']
+            data = CANDY.post('https://vod.study.163.com/eds/api/v1/vod/video', data={
+                'videoId': resource.meta[0],
+                'signature': video_token,
+                'clientType': '1'
+            }).json()
+
+            resolutions = [3, 2, 1]
+
+            find = False
+            for sp in resolutions[CONFIG['resolution']:]:
+                # TODO: 增加视频格式选择
+                for video in data['result']['videos']:
+                    if video['quality'] == sp and video['format'] == 'mp4':
+                        url = video['videoUrl']
+                        ext = '.mp4'
+                        find = True
+                        break
+                if find:
+                    break
+            res_print(file_name + ext)
+            FILES['renamer'].write(re.search(r'(\w+\.mp4)', url).group(1), file_name, ext)
+            FILES['video'].write_string(url)
+            resource.ext = ext
+        
+        else:
+            resolutions = ['Shd', 'Hd', 'Sd']
+            for sp in resolutions[CONFIG['resolution']:]:
+                # TODO: 增加视频格式选择
+                # video_info = re.search(r'%sUrl="(?P<url>.*?(?P<ext>\.((m3u8)|(mp4)|(flv))).*?)"' % sp, res)
+                video_info = re.search(r'(?P<ext>mp4)%sUrl="(?P<url>.*?\.(?P=ext).*?)"' % sp, res)
+                if video_info:
+                    url, ext = video_info.group('url', 'ext')
+                    ext = '.' + ext
+                    break
+            res_print(file_name + ext)
+            FILES['renamer'].write(re.search(r'(\w+\.((m3u8)|(mp4)|(flv)))', url).group(1), file_name, ext)
+            FILES['video'].write_string(url)
+            resource.ext = ext
+        
 
         if not CONFIG['sub']:
             return
@@ -160,12 +193,17 @@ def get_resource(term_id):
         parse_res_list(rich_text_list, None, parse_resource)
 
 
-def start(url, config):
+def start(url, config, cookies):
     """调用接口函数"""
 
     global WORK_DIR
-
+    CANDY.set_cookies(cookies)
     CONFIG.update(config)
+    if cookies.get('NTESSTUDYSI'):
+        CONFIG['hasToken'] = True
+        CONFIG['token'] = cookies.get('NTESSTUDYSI')
+    else:
+        CONFIG['hasToken'] = False
     course_info = get_summary(url)
 
     WORK_DIR = WorkingDir(CONFIG['dir'], course_info[1])

@@ -59,7 +59,8 @@ def main():
 
     if re.match(r'https?://www.icourse163.org/(course|learn)/', args.url):
         from mooc import icourse163
-        icourse163.start(args.url, config)
+        cookies = store_cookies('icourse163.json')
+        icourse163.start(args.url, config, cookies)
     elif re.match(r'https?://www.xuetangx.com/courses/.+/about', args.url):
         from mooc import xuetangx
         cookies = store_cookies('xuetangx.json')

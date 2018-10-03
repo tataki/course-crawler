@@ -116,7 +116,7 @@ def parse_resource(resource):
     if data['protoVersion'] == 2:
         k += '_origin'
 
-    resolutions = ['shd', 'hd', 'sd']
+    resolutions = ['shd', 'hd', 'sd', 'hd', 'shd']
     for sp in resolutions[CONFIG['resolution']:]:
         if data[k].get(sp):
             hex_string = data[k][sp][0] # 有时好几个，先用第一个好了

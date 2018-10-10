@@ -57,7 +57,7 @@ def main():
     config = {'doc': args.no_doc, 'sub': args.no_sub, 'file': args.no_file, 'text': args.no_text, 'dpl': args.no_dpl,
               'cookies': args.c, 'rename': args.inter, 'dir': args.d, 'resolution': resolutions.index(args.r.lower())}
 
-    if re.match(r'https?://www.icourse163.org/(course|learn)/', args.url):
+    if re.match(r'https?://www.icourse163.org/(spoc/)?(course|learn)/', args.url):
         from mooc import icourse163
         cookies = store_cookies('icourse163.json')
         icourse163.start(args.url, config, cookies)

@@ -156,7 +156,7 @@ def get_resource(term_id):
                     pdf_list.append(Document(counter, pdf[3], pdf))
             counter.reset()
 
-            rich_text = re.findall(r'contentId=(\d+).+contentType=(4).+id=(\d+).+jsonContent=(.+);.+lessonId=' +
+            rich_text = re.findall(r'contentId=(\d+).+contentType=(4).+id=(\d+).+jsonContent=(.+?";);.+lessonId=' +
                                    lesson[0] + r'.+name="(.+)"', res)
             for text in rich_text:
                 counter.add(2)

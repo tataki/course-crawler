@@ -16,6 +16,10 @@ def store_cookies(file_name):
 
         cookies_dict = {}
         raw_cookies = input('> ')
+        if not raw_cookies:
+            return {}
+        if raw_cookies[:7] == 'Cookie:':
+            raw_cookies = raw_cookies[7:]
 
         for cookie in raw_cookies.split(';'):
             key, value = cookie.lstrip().split("=", 1)

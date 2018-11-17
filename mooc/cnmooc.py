@@ -138,3 +138,8 @@ def start(url, config, cookies=None):
 
     if CONFIG['doc']:
         get_doc(resource[1])
+
+    if CONFIG['aria2']:
+        del FILES['video']
+        WORK_DIR.change('Videos')
+        aria2_download(CONFIG['aria2'], WORK_DIR.path, webui=CONFIG['aria2-webui'], session=CONFIG['aria2-session'])

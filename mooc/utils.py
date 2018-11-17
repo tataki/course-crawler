@@ -4,6 +4,7 @@
 import re
 import os
 import requests
+import subprocess
 
 SYS = os.name
 
@@ -336,3 +337,29 @@ def parse_res_list(res_list, file, *operator):
     else:
         for res in res_list:
             res.operation(*operator)
+
+def aria2_download(aria2_path, workdir, webui=None, session=None):
+    input_file = os.path.join(workdir, 'Videos.txt')
+
+    if webui:
+        cmd = '"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"' \
+                  ' --flag-switches-begin' \
+                  ' --flag-switches-end' \
+                  ' %s' % webui
+        subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
+    
+    cmd = '"%s"' \
+          ' --enable-rpc' \
+          ' --rpc-listen-port 6800' \
+          ' --continue' \
+          ' --dir="%s"'\
+          ' --input-file="%s"'\
+          ' --max-concurrent-downloads=20' \
+          ' --max-connection-per-server=10' \
+          ' --rpc-max-request-size=1024M' % (aria2_path, workdir, input_file)
+
+    if session:
+        cmd += ' --save-session=%s' \
+               ' --save-session-interval=60' % session
+    print('正在使用aria2下载视频...')
+    subprocess.run(cmd, shell=True, stdout=subprocess.PIPE)

@@ -54,12 +54,16 @@ def main():
     parser.add_argument('--no-file', action='store_false', help='不下载附件')
     parser.add_argument('--no-text', action='store_false', help='不下载富文本')
     parser.add_argument('--no-dpl', action='store_false', help='不生成播放列表')
+    parser.add_argument('--aria2', default=None, help='aria2路径，配置后自动调用aria2下载视频')
+    parser.add_argument('--aria2-webui', default=None, help='aria2-webui路径，配置后自动开启webui')
+    parser.add_argument('--aria2-session', default=None, help='aria2-session路径，配置后将未完成任务保存至session中')
 
     args = parser.parse_args()
     resolutions = ['shd', 'hd', 'sd']
 
     config = {'doc': args.no_doc, 'sub': args.no_sub, 'file': args.no_file, 'text': args.no_text, 'dpl': args.no_dpl,
-              'cookies': args.c, 'rename': args.inter, 'dir': args.d, 'resolution': resolutions.index(args.r.lower())}
+              'cookies': args.c, 'rename': args.inter, 'dir': args.d, 'resolution': resolutions.index(args.r.lower()),
+              'aria2': args.aria2, 'aria2-webui': args.aria2_webui, 'aria2-session': args.aria2_session}
 
     if re.match(r'https?://www.icourse163.org/(spoc/)?(course|learn)/', args.url):
         from mooc import icourse163

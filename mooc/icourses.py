@@ -74,3 +74,8 @@ def start(url, config):
         parse_res_list(video_list, rename, FILES['playlist'].write, parse_video)
     else:
         parse_res_list(video_list, rename, parse_video)
+
+    if CONFIG['aria2']:
+        del FILES['video']
+        WORK_DIR.change('Videos')
+        aria2_download(CONFIG['aria2'], WORK_DIR.path, webui=CONFIG['aria2-webui'], session=CONFIG['aria2-session'])

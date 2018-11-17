@@ -197,3 +197,8 @@ def start(url, config, cookies=None):
 
     # 获得资源
     get_resource(course_info[0])
+
+    if CONFIG['aria2']:
+        del FILES['video']
+        WORK_DIR.change('Videos')
+        aria2_download(CONFIG['aria2'], WORK_DIR.path, webui=CONFIG['aria2-webui'], session=CONFIG['aria2-session'])

@@ -129,18 +129,18 @@ def get_resource(term_id):
     res = CANDY.post('https://www.icourse163.org/dwr/call/plaincall/CourseBean.getMocTermDto.dwr',
                      data=post_data).text.encode('utf_8').decode('unicode_escape')
 
-    chapters = re.findall(r'homeworks=\w+;.+id=(\d+).+name="(.+)";', res)
+    chapters = re.findall(r'homeworks=\w+;.+id=(\d+).+name="([\s\S]+?)";', res)
     for chapter in chapters:
         counter.add(0)
         outline.write(chapter[1], counter, 0)
 
-        lessons = re.findall(r'chapterId=' + chapter[0] + r'.+contentType=1.+id=(\d+).+name="(.+)".+test', res)
+        lessons = re.findall(r'chapterId=' + chapter[0] + r'.+contentId=null.+contentType=1.+id=(\d+).+name="([\s\S]+?)"', res)
         for lesson in lessons:
             counter.add(1)
             outline.write(lesson[1], counter, 1)
 
             videos = re.findall(r'contentId=(\d+).+contentType=(1).+id=(\d+).+lessonId=' +
-                                lesson[0] + r'.+name="(.+)"', res)
+                                lesson[0] + r'.+name="([\s\S]+?)"', res)
             for video in videos:
                 counter.add(2)
                 outline.write(video[3], counter, 2, sign='#')
@@ -148,7 +148,7 @@ def get_resource(term_id):
             counter.reset()
 
             pdfs = re.findall(r'contentId=(\d+).+contentType=(3).+id=(\d+).+lessonId=' +
-                              lesson[0] + r'.+name="(.+)"', res)
+                              lesson[0] + r'.+name="([\s\S]+?)"', res)
             for pdf in pdfs:
                 counter.add(2)
                 outline.write(pdf[3], counter, 2, sign='*')
@@ -157,7 +157,7 @@ def get_resource(term_id):
             counter.reset()
 
             rich_text = re.findall(r'contentId=(\d+).+contentType=(4).+id=(\d+).+jsonContent=(.+?";);.+lessonId=' +
-                                   lesson[0] + r'.+name="(.+)"', res)
+                                   lesson[0] + r'.+name="([\s\S]+?)"', res)
             for text in rich_text:
                 counter.add(2)
                 outline.write(text[4], counter, 2, sign='+')

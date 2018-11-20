@@ -4,13 +4,14 @@
 
 详细信息和用法请见 [https://mooc.xoy.io/](https://mooc.xoy.io/)。
 
-## 
-此版本为去除aria2，使用python内置下载
-暂时只支持icourse163
-TODO:
--[ ]添加aira2 prc远程下载模式
--[ ]全部网课支持
-##
+
+> 此版本为去除aria2，使用python内置下载
+> 暂时只支持icourse163
+
+## TODO:
+- [ ] 添加aira2 prc远程下载模式
+- [ ] 全部网课支持
+
 
 ### 声明
 

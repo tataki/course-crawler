@@ -5,7 +5,8 @@ import re
 import os
 import requests
 import subprocess
-
+from .downloader import DownLoader
+from urllib.request import urlopen
 SYS = os.name
 
 
@@ -280,7 +281,7 @@ class Counter(object):
         counter：计数器的列表。
     """
 
-    def __init__(self, level_num = 3):
+    def __init__(self, level_num=3):
         """初始化一个列表"""
 
         self.counter = [0] * level_num
@@ -338,22 +339,23 @@ def parse_res_list(res_list, file, *operator):
         for res in res_list:
             res.operation(*operator)
 
+
 def aria2_download(aria2_path, workdir, webui=None, session=None):
     input_file = os.path.join(workdir, 'Videos.txt')
 
     if webui:
         cmd = '"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"' \
-                  ' --flag-switches-begin' \
-                  ' --flag-switches-end' \
-                  ' %s' % webui
+              ' --flag-switches-begin' \
+              ' --flag-switches-end' \
+              ' %s' % webui
         subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
-    
+
     cmd = '"%s"' \
           ' --enable-rpc' \
           ' --rpc-listen-port 6800' \
           ' --continue' \
-          ' --dir="%s"'\
-          ' --input-file="%s"'\
+          ' --dir="%s"' \
+          ' --input-file="%s"' \
           ' --max-concurrent-downloads=20' \
           ' --max-connection-per-server=10' \
           ' --rpc-max-request-size=1024M' % (aria2_path, workdir, input_file)
@@ -363,3 +365,15 @@ def aria2_download(aria2_path, workdir, webui=None, session=None):
                ' --save-session-interval=60' % session
     print('正在使用aria2下载视频...')
     subprocess.run(cmd, shell=True, stdout=subprocess.PIPE)
+
+
+def video_download(files,path):
+    down = DownLoader(path)
+    files_len = len(files)
+    current_len = 1
+    for name, url in files.items():
+        print('正在下载：{0}                {1}/{2}'.format(name,current_len,files_len))
+        down.create_task(name,url)
+        down.start_down()
+        current_len += 1
+        print('\n')

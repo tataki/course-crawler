@@ -63,9 +63,11 @@ def parse_resource(resource):
                         break
                 if find:
                     break
-            res_print(file_name + ext)
-            FILES['renamer'].write(re.search(r'(\w+\.mp4)', url).group(1), file_name, ext)
-            FILES['video'].write_string(url)
+            filename = file_name + ext
+            res_print(filename)
+            # FILES['renamer'].write(re.search(r'(\w+\.mp4)', url).group(1), file_name, ext)
+            # FILES['video'].write_string(url)
+            FILES[filename] = url
             resource.ext = ext
         
         else:
@@ -78,9 +80,11 @@ def parse_resource(resource):
                     url, ext = video_info.group('url', 'ext')
                     ext = '.' + ext
                     break
-            res_print(file_name + ext)
-            FILES['renamer'].write(re.search(r'(\w+\.((m3u8)|(mp4)|(flv)))', url).group(1), file_name, ext)
-            FILES['video'].write_string(url)
+            filename = file_name + ext
+            res_print(filename)
+            # FILES['renamer'].write(re.search(r'(\w+\.mp4)', url).group(1), file_name, ext)
+            # FILES['video'].write_string(url)
+            FILES[filename] = url
             resource.ext = ext
         
 
@@ -208,12 +212,14 @@ def start(url, config, cookies):
 
     WORK_DIR = WorkingDir(CONFIG['dir'], course_info[1])
     WORK_DIR.change('Videos')
-    FILES['renamer'] = Renamer(WORK_DIR.file('Rename.bat'))
-    FILES['video'] = ClassicFile(WORK_DIR.file('Videos.txt'))
 
     get_resource(course_info[0])
-
-    if CONFIG['aria2']:
-        del FILES['video']
-        WORK_DIR.change('Videos')
-        aria2_download(CONFIG['aria2'], WORK_DIR.path, webui=CONFIG['aria2-webui'], session=CONFIG['aria2-session'])
+    WORK_DIR.change('Videos')
+    print('------------即将开始下载视频--------')
+    time.sleep(2)
+    video_download(FILES,WORK_DIR.path)
+    #
+    # if CONFIG['aria2']:
+    #     del FILES['video']
+    #     WORK_DIR.change('Videos')
+    #     aria2_download(CONFIG['aria2'], WORK_DIR.path, webui=CONFIG['aria2-webui'], session=CONFIG['aria2-session'])
